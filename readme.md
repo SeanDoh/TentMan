@@ -1,6 +1,6 @@
 # TentMan
 
-Web app for manage activities related to a grow tent.
+Web app for managing activities related to a grow tent.
 
 ## Tech:
 - React.js frontend
