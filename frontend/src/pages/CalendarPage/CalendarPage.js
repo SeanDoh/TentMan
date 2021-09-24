@@ -6,7 +6,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Plus } from 'phosphor-react';
 import './CalendarPage.css'
 
-export default function CalendarPage() {
+export default function CalendarPage(props) {
   const [formPopup, setFormPopup] = useState(<></>);
   const [events, setEvents] = useState([]);
 
@@ -16,9 +16,14 @@ export default function CalendarPage() {
   useEffect(() => {
     // get events
     const callAPI = async () => {
-      let res = await fetch('/events');
-      let data = await res.json();
-      setEvents(data.data);
+      if (props.demo){
+        
+      }
+      else{
+        let res = await fetch('/events');
+        let data = await res.json();
+        setEvents(data.data);
+      }
     }
 
     // add to detect click outside of popup
@@ -87,14 +92,27 @@ export default function CalendarPage() {
     }
     const postForm = async () => {
       try {
-        const options = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(postData)
+        let res;
+        if(props.demo){
+          console.log('test')
+          res = {ok:true}
         }
-        let res = await fetch('/events', options)
+        else{
+          const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(postData)
+          }
+          res = await fetch('/events', options)
+        }
         if (res.ok) {
-          const id = (await res.json()).id;
+          let id;
+          if(props.demo){
+            id = 1;
+          }
+          else{
+            id = (await res.json()).id;
+          }
           setFormPopup(<CalendarForm
             forwardedRef={formPopupRef}
             event={{
@@ -119,7 +137,7 @@ export default function CalendarPage() {
           }
           else{
             let tempEvents = [...events]
-            tempEvents = tempEvents.filter(el => el.id != data.id)
+            tempEvents = tempEvents.filter(el => el.id !== data.id)
             setEvents([...tempEvents, {
               id: data.id,
               title: data.title,
@@ -149,6 +167,7 @@ export default function CalendarPage() {
           />)
         }
       } catch (error) {
+        console.log(error)
         setFormPopup(<CalendarForm
           forwardedRef={formPopupRef}
           event={{
@@ -196,7 +215,7 @@ export default function CalendarPage() {
             error={false}
           />)
           let tempEvents = [...events]
-          tempEvents = tempEvents.filter(el => el.id != e.target.attributes.data_id.value)
+          tempEvents = tempEvents.filter(el => el.id !== e.target.attributes.data_id.value)
           setEvents(tempEvents)
           setTimeout(
             () => {setFormPopup(<></>)
@@ -263,6 +282,10 @@ export default function CalendarPage() {
       />
     </div>
   );
+}
+
+function demoGen(){
+
 }
 
 function renderDay(day) {

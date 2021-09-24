@@ -31,7 +31,7 @@ export default function App() {
             <CamerasPage/>
           </Route>
           <Route path='/pages/calendar'>
-            <CalendarPage/>
+            <CalendarPage demo={process.env.REACT_APP_IS_DEMO}/>
           </Route>
         </Switch>
       </div>

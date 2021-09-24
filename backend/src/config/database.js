@@ -5,7 +5,7 @@ let dbConnector = async function (fastify, options) {
   try {
     const pool = mariadb.createPool({
       host: 'localhost',
-      user: 'root',
+      user: process.env.DATABASE_USER,
       database: process.env.DATABASE,
       password: process.env.DATABASE_PASSWORD,
       connecionLimit: 10

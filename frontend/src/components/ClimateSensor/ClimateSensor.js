@@ -31,8 +31,13 @@ class ClimateSensor extends Component {
 
   async callAPI() {
     try {
-      const response = await fetch('/climatesensor');
-      return await response.json();
+      if (this.props.demo){
+        return demoGen();
+      }
+      else{
+        const response = await fetch('/climatesensor');
+        return await response.json();
+      }
     } catch (error) {
       return error;
     }
@@ -40,8 +45,8 @@ class ClimateSensor extends Component {
 
   async componentDidMount() {
     const res = await this.callAPI();
-    console.log(res)
     const data = res.data;
+    console.log(data)
     const apiResponse = true;
     const { date_read, sensor_name, temperature, humidity } = data;
     this.setState({ date_read, apiResponse, sensor_name, temperature, humidity });
@@ -105,3 +110,19 @@ class ClimateSensor extends Component {
 }
 
 export default ClimateSensor;
+
+function demoGen(){
+  return { 
+    data: {
+      date_read: new Date(),
+      temperature: getRandomInt(60,90),
+      humidity: getRandomInt(40,100)
+    }
+  }
+}
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}

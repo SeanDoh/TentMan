@@ -3,7 +3,7 @@ dotenv.config({ path: __dirname + '/.env' });
 const path = require('path');
 //const encoder = require('./src/encoder')
 const server = require('fastify')({
-  logger: process.env.ENV === 'live' ? false : (process.env.ENV === 'test' ? true : false)
+  logger: process.env.ENV === 'live' ? false : (process.env.ENV === 'test' ? true : true)
 })
 
 server
@@ -27,6 +27,15 @@ server.get('/', async (request, reply) => {
 server.get('/home', async (request, reply) => {
   try {
     reply.sendFile('index.html');
+  }
+  catch (e) {
+    reply.code(500).send({error: 'error'});
+  }
+});
+
+server.get('/video', async (request, reply) => {
+  try {
+    reply.sendFile('file.mp4', path.join(__dirname, 'video'));
   }
   catch (e) {
     reply.code(500).send({error: 'error'});

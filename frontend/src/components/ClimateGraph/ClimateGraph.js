@@ -31,6 +31,9 @@ class ClimateGraph extends Component {
   }
 
   async callAPI() {
+    if(this.props.demo){
+      return(demoGen(this.state.hours_back))
+    }
     try {
       const response = await fetch(`/climategraph?hours_back=${this.state.hours_back}`);
       let data = await response.json();
@@ -163,4 +166,27 @@ class HoursOptions extends PureComponent {
       </ul>
     )
   }
+}
+
+//{"date_read":"2021-09-17T14:57:02.000Z","temperature":"78.08","humidity":"58.00"}
+function demoGen(hours_back) {
+
+  let data_count = (hours_back * 60)/5;
+  let data = { data: [] };
+  for (let i = 0; i <= data_count; i++) {
+    let today = new Date();
+    let reading = {
+      date_read: new Date(today.setMinutes(today.getMinutes() - (i * 5))).toISOString().split('T')[1].substring(0, 5),
+      temperature: getRandomInt(70, 90),
+      humidity: getRandomInt(40, 100)
+    }
+    data.data.push(reading);
+  }
+  return data;
+}
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
