@@ -9,7 +9,7 @@ export default function Camera(props) {
     return (
       <div id={id} className='flex m-2 relative'>
         <video width={props.width} height={props.height} autoPlay controls>
-          <source src="http://192.168.0.205/video" type="video/mp4" />
+          <source src="/video" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>
